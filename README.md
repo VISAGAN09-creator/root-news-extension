@@ -1,87 +1,108 @@
-# Root News MVP
+# Root News — Bridging the Context Gap in Digital Media
 
-Root News Extension is a Minimum Viable Product (MVP) designed to provide historical context and concise summaries for news headlines right from your browser. It consists of a Chrome Extension built with React, Vite, and Tailwind CSS, and a FastAPI backend powered by Firebase Firestore and the Google Gemini API.
+> **"I can't go back to reading news the old way."**
 
-## Project Structure
+---
 
-The project is split into two primary directories:
+## The Problem
 
-- `/frontend` - The Chrome Extension (React + Vite + Tailwind)
-- `/backend` - The Python-based REST API (FastAPI)
+News articles assume you already know the backstory. You don't. So you either abandon the article or go down a rabbit hole of Google tabs.
 
-## Backend Configuration
+That's **Context Collapse** — and it's everywhere.
 
-The backend connects to Google Firestore to fetch historical context documents and uses the Google Gemini SDK for intelligent summarization.
+---
+
+## The Idea
+
+A single **"Root Info"** button inside any news article. Click it → an instant overlay explains the *foundational history* behind the story. No new tab. No page reload. You stay on the article.
+
+---
+
+## Why It's Different
+
+Most AI tools hallucinate. Root News doesn't — because the AI is fed **exclusively from the publisher's own verified archives**, not the open web. The result is context you can actually trust.
+
+---
+
+## Technical Architecture
+
+```
+/
+├── frontend/        # Chrome Extension (React + Vite + Tailwind CSS)
+└── backend/         # REST API (Python FastAPI + Firebase Firestore + Gemini)
+```
+
+```
+[Chrome Extension]
+       │  POST /api/root-info  {"headline": "..."}
+       ▼
+[FastAPI Backend]
+       ├──► [Firebase Firestore]   ← verified historical context
+       └──► [Google Gemini API]    ← generates 3-bullet summary
+```
+
+---
+
+## Backend Setup
 
 ### Requirements
-
-1. Python 3.9+
-2. A Firebase project with Firestore enabled.
-3. A Google Cloud project with Google Gemini API access.
+- Python 3.9+
+- Firebase project with Firestore enabled
+- Google Cloud project with Gemini API access
 
 ### Environment Variables
 
-Before running the backend, make sure to set the following environment variables:
+```bash
+GOOGLE_APPLICATION_CREDENTIALS=path/to/firebase-service-account.json
+GEMINI_API_KEY=your_gemini_api_key_here
+```
 
-- `GOOGLE_APPLICATION_CREDENTIALS`: Path to your Firebase service account JSON key.
-- `GEMINI_API_KEY`: Your Gemini API access key.
-
-### Setup & Run
-
-Navigate to the backend directory and install the dependencies:
+### Install & Run
 
 ```bash
 cd backend
 pip install -r requirements.txt
-```
-
-Run the FastAPI server:
-
-```bash
 python main.py
 ```
-The backend server will run on `http://localhost:8000`.
 
-### API Endpoints
+Server runs at `http://localhost:8000`.
 
-- `POST /api/root-info`: Expects a JSON payload `{"headline": "Your headline"}` and returns a dynamically generated 3-bullet point summary based on the fetched historical context.
+### API
 
-## Frontend (Chrome Extension)
+| Method | Endpoint | Payload | Response |
+|--------|----------|---------|----------|
+| `POST` | `/api/root-info` | `{"headline": "..."}` | 3-bullet historical context summary |
 
-The Chrome extension sends requests to the backend for generated context summaries and natively displays them in the browser.
+---
 
-### Setup & Build
-
-Navigate to the frontend directory and install the dependencies:
+## Frontend Setup (Chrome Extension)
 
 ```bash
 cd frontend
 npm install
-```
-
-Build the extension:
-
-```bash
 npm run build
 ```
 
-This will output the compiled assets in the `frontend/dist` directory.
+### Load into Chrome
 
-### Installing in Chrome
+1. Go to `chrome://extensions/`
+2. Enable **Developer Mode**
+3. Click **Load unpacked** → select `frontend/dist`
 
-1. Open Chrome and go to `chrome://extensions/`.
-2. Enable **Developer Mode** (toggle in the top right corner).
-3. Click on **Load unpacked**.
-4. Select the `frontend/dist` directory.
+---
 
 ## Contributing
 
-1. Fork the repo.
-2. Create your feature branch (`git checkout -b feature/NewFeature`).
-3. Commit your changes (`git commit -m 'Add NewFeature'`).
-4. Push to the branch (`git push origin feature/NewFeature`).
-5. Open a Pull Request.
+1. Fork the repo
+2. Create your branch: `git checkout -b feature/NewFeature`
+3. Commit: `git commit -m 'Add NewFeature'`
+4. Push: `git push origin feature/NewFeature`
+5. Open a Pull Request
+
+---
 
 ## License
 
-This project is licensed under the MIT License.
+MIT License. Built for PS-8: AI-Native News Experience by Kiruthika C G, Visagan G, and Yogender Kumar P.
+
+GitHub: [root-news-extension](https://github.com/VISAGAN09-creator/root-news-extension)
